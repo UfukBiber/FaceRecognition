@@ -142,9 +142,19 @@ def build_inception_V4():
     out = stem_block(inp)
 
     out = Inception_A(out)
+    out = Inception_A(out)
     out = Reduction_A(out)
+    out = Inception_B(out)
+    out = Inception_B(out)
     out = Inception_B(out)
     out = Reduction_B(out)
     out = Inception_C(out)
+    out = Inception_C(out)
 
-    return tf.keras.models.Model(inp, out, name = "Inception_V4")
+    out = tf.keras.layers.GlobalAveragePooling2D()(out)
+    out = tf.keras.layers.Dropout(0.2)(out)
+    out = tf.keras.layers.Dense(1024, activation="relu")(out)
+    out = tf.keras.layers.Dropout(0.2)(out)
+    out = tf.keras.layers.Dense(128)(out)
+
+    return tf.keras.models.Model(inp, out, name = "Inception_V4")  
