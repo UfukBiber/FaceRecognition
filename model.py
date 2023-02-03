@@ -6,9 +6,11 @@ from input import load_ds
 
 def build_model():
     inception_v4 = build_inception_V4()
-    inp = tf.keras.layers.Input(shape= (299, 299, 3))
-    out = inception_v4(inp)
-    out = tf.keras.layers.GlobalAveragePooling2D()(out)
+    img_1 = tf.keras.layers.Input(shape= (299, 299, 3))
+    img_2 = tf.keras.layers.Input(shape= (299, 299, 3))
+    encoding_1 = inception_v4(img_1)
+    encoding_2 = inception_v4(img_2)
+    out = tf.keras.layers.subtract()([encoding_1, encoding_2])
     out = tf.keras.layers.Dropout(0.2)(out)
     out = tf.keras.layers.Dense(1, activation="sigmoid")(out)
     return tf.keras.models.Model(inp, out)
